@@ -1,0 +1,218 @@
+{% extends "news/base_form.html"%}
+
+
+{% block content %}
+<style>
+    .ukraine {
+        background-color: rgba(128, 128, 128, 0.5);
+        padding: 20px;
+        margin-bottom: 50px;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+    .opacities {
+        background-color: rgba(128, 128, 128, 0.5);
+        padding: 20px;
+        margin-bottom: 50px;
+        margin-bottom: 20px;
+        
+    }
+    .titles{
+        text-decoration: underline;
+        font-weight: bold;
+    }
+    .table-container {
+    overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        padding: 8px;
+        border: 1px solid #dddddd;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+
+    .opacities:hover {
+        background-color: #f2f2f2;
+    }
+
+    .weather-condition {
+        font-weight: bold;
+        margin-right: 5px;
+    }
+
+    .weather-icon {
+        vertical-align: middle;
+        max-width: 30px;
+        max-height: 30px;
+    }
+
+</style>
+
+<h1>Get weather:</h1>
+    <form class="get_for_form">
+        <input class="get_for_input" type="text" placeholder="Put your city">
+        <button class="get_for_button">Send</button>
+    </form>
+    <div>
+    <div class="get_weather">
+    </div>
+  </div>
+  </div>
+    <script>
+            document.querySelector('form').addEventListener('submit', e => {
+            e.preventDefault();
+            const input = document.querySelector('input');
+            getData(input.value.trim());
+        });
+
+        getData('London');
+        async function getData(city) {
+
+            const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=78c49d0da7041c7c2d9e2de8d0db7caa`);
+            const data = await res.json();
+
+            if (res.status !== 200) {
+                alert(data.message);
+            } else {
+                createWeather(data);
+            }
+        }
+        function convertUnixTimestampToTime(unixTimestamp) {
+            var date = new Date(unixTimestamp * 1000);
+            var hours = date.getHours();
+            var minutes = "0" + date.getMinutes();
+            var seconds = "0" + date.getSeconds();
+            var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+            return formattedTime;
+}
+        function createWeather(data) {
+            sumrise_time = convertUnixTimestampToTime(data.sys.sunrise)
+            sunset_time = convertUnixTimestampToTime(data.sys.sunset)
+            document.querySelector('.get_weather').innerHTML = `
+            <div class="get_left">
+                <b class="get_city">${data.name}</b>
+                <span class="get_for_spans">Humidity: <b class="get_for_b">${data.main.humidity}%</b></span>
+                <span class="get_for_spans">Wind speed m/s: <b class="get_for_b">${Math.round(data.wind.speed)} m/s</b></span>
+                <span class="get_for_spans">Condition: <b class="get_for_b">${data.weather[0].description}</b></span>
+            </div>
+            <div>
+              <span class="get_for_spans">lat°: <b class="get_for_b">${data.coord.lat}°</b></span>
+              <span class="get_for_spans">lon°: <b class="get_for_b">${data.coord.lon}°</b></span>
+              <span class="get_for_spans">Country: <b class="get_for_b">${data.sys.country}</b></span>
+              <span class="get_for_spans">Region: <b class="get_for_b">${data.name}</b></span>
+              <span class="get_for_spans">Timezone: <b class="get_for_b">${data.timezone}</b></span>
+            </div>
+            <div>
+              <span class="get_for_spans">T℃ feels: <b class="get_for_b">${Math.round(data.main.feels_like - 273)}℃</b></span>
+              <span class="get_for_spans">T℃ min: <b class="get_for_b">${Math.round(data.main.temp_min - 273)}℃</b></span>
+              <span class="get_for_spans">T℃ max: <b class="get_for_b">${Math.round(data.main.temp_max - 273)}℃</b></span>
+              <span class="get_for_spans">Sunrise: <b class="get_for_b">${sumrise_time}</b></span>
+              <span class="get_for_spans">Sunset: <b class="get_for_b">${sunset_time}</b></span>
+            </div>
+            <div>
+              <span class="get_for_spans">Pressure: <b class="get_for_b">${data.main.pressure} hPa</b></span>
+              <span class="get_for_spans">Pressure sea: <b class="get_for_b">${data.main.sea_level} hPa</b></span>
+              <span class="get_for_spans">Pressure ground: <b class="get_for_b">${data.main.grnd_level} hPa</b></span>
+            </div>
+            <div class="get_right">
+                <img class="get_for_img" src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png">
+                <span class="get_temp">${Math.round(data.main.temp - 273)}℃</span>
+            </div>`;
+        }
+    </script>
+
+{% comment %} Weather {% endcomment %}
+<div class="ukraine">
+    <div class="ukraineH2 H2alike">
+        <div class="news__title__h2"><h2>Погода в деталях</h2></div>
+        <div class="ukraineLink LinkAlike">
+      <a href="{% url 'news:all_weather_cities'%}">
+        <h2 class="ukraineLinkH2 LinkH2Alike">Загальні дані:</h2>
+      </a>
+    </div>
+  </div>
+    <div class="ukraineBlock BlockAlike table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Oblast</th>
+                    <th>City</th>
+                    <th>lat°</th>
+                    <th>lon°</th>
+                    <th>CC</th>
+                    <th>Weather</th>
+                    <th>T℃ now</th>
+                    <th>T℃ feels</th>
+                    <th>T℃ min</th>
+                    <th>T℃ max</th>
+                    <th>Pressure sea hPa</th>
+                    <th>Pressure hPa</th>
+                    <th>Humidity %</th>
+                    <th>Wind speed m/s</th>
+                    <th>Sunrise</th>
+                    <th>Sunset</th>
+                    <th>Region</th>
+                    <th>Update</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for weather in weather_items %}
+                <tr class="opacities">
+                    <td>{{ weather.oblast }}</td>
+                    <td>{{ weather.city }}</td>
+                    <td>{{ weather.lat }}</td>
+                    <td>{{ weather.lon }}</td>
+                    <td>{{ weather.country_code }}</td>
+                    <td>
+                        <span class="weather-condition">{{ weather.weather_condition }}</span>
+                        <img src="{{ weather.weather_icon }}" alt="{{ weather.oblast }}" class="weather-icon">
+                    </td>
+                    <td>{{ weather.temperature_current }}</td>
+                    <td>{{ weather.temperature_feels }}</td>
+                    <td>{{ weather.temperature_min }}</td>
+                    <td>{{ weather.temperature_max }}</td>
+                    <td>{{ weather.pressure_sea_level }}</td>
+                    <td>{{ weather.pressure_ground_level }}</td>
+                    <td>{{ weather.humidity }}</td>
+                    <td>{{ weather.wind_speed }}</td>
+                    <td>{{ weather.sunrise }}</td>
+                    <td>{{ weather.sunset }}</td>
+                    <td>{{ weather.region }}</td>
+                    <td>{{ weather.created_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% comment %} <script>
+  async function updateWeatherImage(weatherId, city) {
+    const image = document.querySelector(`#weather-img-${weatherId}`);
+    if (image) {
+      const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=78c49d0da7041c7c2d9e2de8d0db7caa`);
+      const data = await res.json();
+
+      if (res.ok) {
+        image.src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+      } else {
+        alert(data.message);
+      }
+    }
+  }
+
+  {% for weather in weather_items %}
+    updateWeatherImage({{ weather.id }}, '{{ weather.city }}');
+  {% endfor %}
+</script> {% endcomment %}
+{% endblock %}

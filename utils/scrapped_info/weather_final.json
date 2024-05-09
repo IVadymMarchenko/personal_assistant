@@ -1,0 +1,22 @@
+[
+    {
+        "city": "Луцьк",
+        "lat": "50.7450733",
+        "lon": "25.320078",
+        "country_code": "UA",
+        "weather_condition": "broken clouds",
+        "weather_icon": "04d",
+        "temperature_current": "21.29",
+        "temperature_feels": "20.65",
+        "temperature_min": "21.29",
+        "temperature_max": "21.29",
+        "pressure_sea_level": "1013",
+        "pressure_ground_level": "989",
+        "humidity": "45",
+        "wind_speed": "4.04",
+        "wind_direction": "273",
+        "sunrise": "05:45:16",
+        "sunset": "20:45:27",
+        "region": "Lutsk"
+    }
+]

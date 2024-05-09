@@ -1,0 +1,55 @@
+{% extends "users/base_form.html" %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Confirm Delete Contact</h2>
+                    <p>Are you sure you want to delete the following contact?</p>
+                    <p>Name: {{ contact.name }}</p>
+                    <p>Address: {{ contact.address }}</p>
+                    <p>Phone Number: {{ contact.phone_number }}</p>
+                    <p>Email: {{ contact.email }}</p>
+                    <p>Birthday: {{ contact.birthday }}</p>
+                    <form id="delete-contact-form" action="{% url 'users:contact_delete' contact.pk %}" method="POST">
+                        {% csrf_token %}
+                        <button id="delete-button" type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    <a href="{% url 'users:contacts' %}" class="btn btn-back d-block w-100 mb-3"><i class="fas fa-arrow-left me-1"></i> Back to Contacts</a>
+                    <div id="success-message" style="display: none; color: green;">Contact successfully deleted.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var deleteForm = document.getElementById('delete-contact-form');
+        var deleteButton = document.getElementById('delete-button');
+        deleteButton.addEventListener('click', function (event) {
+            event.preventDefault(); 
+            fetch(deleteForm.action, {
+                method: deleteForm.method,
+                body: new FormData(deleteForm),
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(function (response) {
+                if (response.ok) {
+                    document.getElementById('success-message').style.display = 'block';
+                    setTimeout(function () {
+                        window.location.href = '{% url "users:contacts" %}';
+                    }, 1000);
+                } else {
+                    console.error('Error deleting contact:', response.statusText);
+                }
+            })
+            .catch(function (error) {
+                console.error('Error deleting contact:', error);
+            });
+        });
+    });
+</script>
+{% endblock %}

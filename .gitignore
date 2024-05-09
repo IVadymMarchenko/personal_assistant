@@ -1,0 +1,13 @@
+__pycache__
+.idea
+.env
+celerybeat-schedule.bak
+celerybeat-schedule.dat
+celerybeat-schedule.dir
+Log
+0001_initial.py
+0002_initial.py
+0002_initial.py
+postgres-data
+staticfiles
+db.sqlite3
