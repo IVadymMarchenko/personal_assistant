@@ -71,7 +71,7 @@ def add_notes(request):
             messages.success(request, 'Заметка успешно создана.')
             return redirect('notes:notes_list')
         else:
-            # Если форма не прошла валидацию, добавляем сообщение об ошибке
+            
             messages.error(request, 'Заметка не создана. Пожалуйста, заполните все поля формы.')
     else:
         form = NoteForm()
