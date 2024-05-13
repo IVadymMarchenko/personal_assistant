@@ -43,16 +43,16 @@ def upload(request):
     if request.method == 'POST':
         form = FormPicture(request.POST, request.FILES)
         if form.is_valid():
-            # Получаем файл из формы
+            
             file = request.FILES.get('image')
             if file:
-                # Загружаем файл на Cloudinary
+                
                 uploaded_file = cloudinary.uploader.upload(file, resource_type="raw")
 
-                # Сохраняем описание и URL загруженного файла в модели Picture
+                
                 picture = form.save(commit=False)
                 picture.description = form.cleaned_data['description']
-                picture.image = uploaded_file['secure_url']  # URL загруженного файла
+                picture.image = uploaded_file['secure_url']  
                 picture.user=request.user
                 picture.save()
                 form.add_error('image','File was successfully uploaded')
@@ -88,21 +88,21 @@ def edit_image(request,image_id):
 
 def download_image(request, image_id):
     try:
-        # Получаем объект Picture по его идентификатору
+        
         picture = Picture.objects.get(id=image_id)
-        # Получаем URL изображения из поля image объекта Picture
+        
         image_url = picture.image.url
-        # Получаем содержимое изображения по его URL с помощью запроса
+       
         response = requests.get(image_url)
-        # Получаем расширение файла изображения из его URL
+       
         type_file=picture.image.url.split('.').pop()
-        # Создаем HTTP-ответ с содержимым изображения
+       
         http_response = HttpResponse(response.content, content_type='image/jpeg')
-        # Устанавливаем заголовок для скачивания
+        
         http_response['Content-Disposition'] = f'attachment; filename={picture.description}.{type_file}'
         return http_response
     except Exception as e:
-        # Обработка ошибок, если изображение не найдено или произошла другая ошибка
+        
         return HttpResponse("Error: " + str(e))
 
 def show_all_photo(request,page=1):
@@ -131,10 +131,10 @@ def show_all_photo(request,page=1):
 
 def show_all_video(request, page=1):
     user=request.user
-    # Получаем все изображения из базы данных
+    
     images = Picture.objects.filter(user=user)
 
-    # Фильтруем изображения, оставляя только видеофайлы
+    
     video_images = [
         {
             'url': image.image.url,
@@ -144,18 +144,18 @@ def show_all_video(request, page=1):
         } for image in images if get_file_type(image.image.url) == 'video'
     ]
 
-    # Разбиваем список видеофайлов на страницы
+    ы
     paginator = Paginator(video_images, 6)
     try:
         video_images_page = paginator.page(page)
     except PageNotAnInteger:
-        # Если номер страницы не целое число, показываем первую страницу
+       
         video_images_page = paginator.page(1)
     except EmptyPage:
-        # Если номер страницы больше максимального, показываем последнюю страницу
+        
         video_images_page = paginator.page(paginator.num_pages)
 
-    # Отображаем шаблон с отфильтрованными видеофайлами на первой странице
+    
     return render(request, 'app_photo/videos.html', {'image_data': video_images_page})
 
 def show_all_another(request,page=1):
