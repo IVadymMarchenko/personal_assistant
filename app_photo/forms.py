@@ -5,7 +5,7 @@ from .models import Picture
 
 
 def validate_file_size(value):
-    # Максимальный размер файла в байтах (10 МБ)
+    
     max_size = 10 * 1024 * 1024  # 10 МБ
 
     if value.size > max_size:
