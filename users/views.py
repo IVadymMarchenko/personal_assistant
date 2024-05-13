@@ -31,7 +31,7 @@ def signup(request):
             login(request, user)
             return redirect("news:index")
         # else:
-        #     # Обработка ошибок для отдельных полей
+        #
         #     for field in form.errors:
         #         for error in form.errors[field]:
         #             messages.error(request, f"{field}: {error}")
